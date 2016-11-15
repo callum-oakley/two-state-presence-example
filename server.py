@@ -17,9 +17,8 @@ def pusher_authentication():
     channel=request.form['channel_name'],
     socket_id=request.form['socket_id'],
     custom_data={
-      'user_id': request.form['socket_id'],
+      'user_id': request.form['user'],
       'user_info': {
-        'user': request.form['user'],
         'state': request.form['state']
       }
     }

@@ -22,7 +22,7 @@ var listMembers = function (channel) {
   return function () {
     console.log('Current users in ' + channel.name + ':')
     channel.members.each(function (member) {
-      console.log('user: ' + member.info.user + '  |  state: ' + member.info.state);
+      console.log('user: ' + member.id + '  |  state: ' + member.info.state);
     });
   }
 };
