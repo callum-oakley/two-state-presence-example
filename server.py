@@ -2,9 +2,7 @@ from flask import Flask, request
 import pusher
 import json
 
-
 app = Flask(__name__)
-
 
 pusher_client = pusher.Pusher(
   app_id='XXXXXX',
@@ -13,7 +11,6 @@ pusher_client = pusher.Pusher(
   ssl=True
 )
 
-
 @app.route('/pusher/auth', methods=['POST'])
 def pusher_authentication():
   auth = pusher_client.authenticate(
@@ -21,12 +18,10 @@ def pusher_authentication():
     socket_id=request.form['socket_id'],
     custom_data={
       'user_id': request.form['socket_id'],
-      # set the user and that user’s state
       'user_info': {
         'user': request.form['user'],
         'state': request.form['state']
       }
     }
   )
-
   return json.dumps(auth)
