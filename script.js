@@ -38,3 +38,9 @@ var subscribeWithState = function (channelName, state) {
   channel.bind('pusher:member_added', listMembers(channel));
   channel.bind('pusher:member_removed', listMembers(channel));
 };
+
+subscribeWithState('presence-one', 'default');
+subscribeWithState('presence-two', 'default');
+
+// to update state of 'presence-one' to 'viewing' just call
+// subscribeWithState('presence-one', 'viewing');
