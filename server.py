@@ -14,16 +14,8 @@ pusher_client = pusher.Pusher(
 )
 
 
-state = {}
-
-
 @app.route('/pusher/auth', methods=['POST'])
 def pusher_authentication():
-  user = request.form['user']
-
-  if not user in state:
-    state[user] = 'default'
-
   auth = pusher_client.authenticate(
     channel=request.form['channel_name'],
     socket_id=request.form['socket_id'],
@@ -31,16 +23,10 @@ def pusher_authentication():
       'user_id': request.form['socket_id'],
       # set the user and that user’s state
       'user_info': {
-        'user': user,
-        'state': state[user]
+        'user': request.form['user'],
+        'state': request.form['state']
       }
     }
   )
 
   return json.dumps(auth)
-
-# update the state of a given user
-@app.route('/pusher/state', methods=['POST'])
-def pusher_update_state():
-    state[request.form['user']] = request.form['state']
-    return json.dumps(True)

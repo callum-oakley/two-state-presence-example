@@ -1,10 +1,11 @@
 Pusher.logToConsole = true;
 
 // we get a random user name for simplicity’s sake
-var user = "anon-" + Math.random().toString().substring(2);
+var user = 'anon-' + Math.random().toString().substring(2);
+var state = 'default'
 
 // so we know who’s who
-console.log("Hi there " + user);
+console.log('Hi there ' + user);
 
 
 var pusher = new Pusher('XXXXXXXXXXXXXXXXXXXX', {
@@ -13,7 +14,8 @@ var pusher = new Pusher('XXXXXXXXXXXXXXXXXXXX', {
   auth: {
     // the auth endpoint needs to know who you are
     params: {
-      user: user
+      user: user,
+      state: state
     }
   }
 });
@@ -25,7 +27,7 @@ var pusher = new Pusher('XXXXXXXXXXXXXXXXXXXX', {
 var listMembers = function () {
   console.log('Current users:')
   channel.members.each(function (member) {
-    console.log("user: " + member.info.user + "  |  state: " + member.info.state);
+    console.log('user: ' + member.info.user + '  |  state: ' + member.info.state);
   });
 };
 
@@ -40,24 +42,11 @@ var subscribeAndBind = function () {
 };
 
 
-// here we tell the server to change the state in our user info; under the hood
-// this is an unsubscribe and resubscribe, but the member_added events double
-// nicely as “state changed” events
-var changeState = function (state) {
+// change the state by mutiating the auth params
+var changeState = function (newState) {
   pusher.unsubscribe('presence-channel');
-
-  xhttp = new XMLHttpRequest();
-  xhttp.open('POST', 'http://127.0.0.1:5000/pusher/state', true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-
-  xhttp.onreadystatechange = function () {
-    if (xhttp.readyState == 4 && xhttp.status == 200) {
-        console.log(xhttp.responseText);
-        subscribeAndBind();
-    }
-  };
-
-  xhttp.send("user=" + user + "&state=" + state);
+  pusher.config.auth.params.state = newState;
+  subscribeAndBind();
 };
 
 
