@@ -32,11 +32,14 @@ var listMembers = function (channel) {
 var subscribeWithState = function (channelName, state) {
   pusher.unsubscribe(channelName);
   pusher.config.auth.params.state = state;
-  var channel = pusher.subscribe(channelName);
+  // we wait for a 10th of a second for the unsubscription to succeed
+  setTimeout(function () {
+    var channel = pusher.subscribe(channelName);
 
-  channel.bind('pusher:subscription_succeeded', listMembers(channel));
-  channel.bind('pusher:member_added', listMembers(channel));
-  channel.bind('pusher:member_removed', listMembers(channel));
+    channel.bind('pusher:subscription_succeeded', listMembers(channel));
+    channel.bind('pusher:member_added', listMembers(channel));
+    channel.bind('pusher:member_removed', listMembers(channel));
+  }, 100);
 };
 
 subscribeWithState('presence-one', 'default');
