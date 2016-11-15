@@ -32,7 +32,7 @@ var listMembers = function (channel) {
 var subscribeWithState = function (channelName, state) {
   pusher.unsubscribe(channelName);
   pusher.config.auth.params.state = state;
-  channel = pusher.subscribe(channelName);
+  var channel = pusher.subscribe(channelName);
 
   channel.bind('pusher:subscription_succeeded', listMembers(channel));
   channel.bind('pusher:member_added', listMembers(channel));
